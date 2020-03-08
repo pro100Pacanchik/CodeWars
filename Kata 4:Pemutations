@@ -1,0 +1,24 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+vector<string> permutations(string s) {
+    string fin = "";
+
+    vector<string >arr;
+    arr.push_back(s);
+    std::sort(s.begin(), s.end());
+    do {
+      bool flag = 1;
+            for (auto now : arr) {
+                if (now == s)
+                   flag = 0;
+            }
+            if (flag) 
+                arr.push_back(s);
+        
+    } while(std::next_permutation(s.begin(), s.end()));
+    return arr;
+}
