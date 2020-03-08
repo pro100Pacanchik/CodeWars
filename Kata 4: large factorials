@@ -1,0 +1,171 @@
+include<string>
+
+#include <algorithm>
+using namespace std;
+string sum_strings(string a, string b) {
+   
+    string s = "";
+    int k = 1;
+
+    int _max = max(a.length(), b.length());
+    int _min = min(a.length(), b.length());
+    bool ost = 0;
+    while (k <= _min) {
+
+        int t1 = (int)a[a.length() - k] - 48;
+
+        int t2 = (int)b[b.length() - k] - 48;
+       
+        int temp = t1 + t2;
+        if (ost == 1) {
+            temp++;
+            ost = 0;
+        }
+        if (temp >= 10) {
+            ost = 1;
+            temp -= 10;
+        }
+        string t = to_string(temp);
+        s += t;
+        ++k;
+    }
+    reverse(s.begin(), s.end());
+    if (a.length() > b.length()) {
+
+        string temp = "";
+        for (int i = _max - _min - 1; i >= 0; --i) {
+            int t1 = (int)a[i] - 48;
+            if (ost == 1) {
+                t1++;
+                ost = 0;
+            }
+            if (t1 >= 10) {
+                ost = 1;
+                t1 -= 10;
+            }
+            string t = to_string(t1);
+            temp += t;
+        }
+        reverse(temp.begin(), temp.end());
+        if (temp[0] == '0') {
+            temp = "1" + temp;
+        }
+        temp += s;
+
+        return temp;
+    }
+    else if (a.length() < b.length()) {
+
+        string temp = "";
+        for (int i = _max - _min - 1; i >= 0; --i) {
+            int t1 = (int)b[i] - 48;
+            if (ost == 1) {
+                t1++;
+                ost = 0;
+            }
+            if (t1 >= 10) {
+                ost = 1;
+                t1 -= 10;
+            }
+            string t = to_string(t1);
+            temp += t;
+        }
+        reverse(temp.begin(), temp.end());
+        if (temp[0] == '0') {
+            temp = "1" + temp;
+        }
+        temp += s;
+
+        return temp;
+    }
+    else {
+        if (ost == 1) {
+            return "1" + s;
+        }
+        else {
+            return s;
+        }
+    }
+}
+string multiply(string a, string b) {
+    int t1 = 0; int t2 = 0;
+    int k = 0;
+    string s1 = "";
+    bool flag = 0;
+    string s2 = "";
+    for (int i = 0; i < a.length(); ++i) {
+        if (a[i] == '0' && flag == 0) {
+        }
+
+        else if (a[i] != 0) {
+            s1 += a[i];
+            flag = 1;
+        }
+    }
+    flag = 0;
+    for (int i = 0; i < b.length(); ++i) {
+        if (b[i] == '0' && flag == 0) {
+        }
+        else if (b[i] != 0) {
+            s2 += b[i];
+            flag = 1;
+        }
+    }
+    if (s1 == "0" || s2 == "0") {
+        return "0";
+    }
+    int first_digit = 0;
+    bool ost = 0;
+    k = 0;
+    string s = "0";
+    if (s2.length() > s1.length()) {
+        swap(s1, s2);
+    }
+    for (int i = s2.length() - 1 ; i >= 0; --i) {
+        string temp = "";
+        int t1 = (int)s2[i] - 48;
+        if (t1 == 0) {
+            ++k;
+            continue;
+        }
+        for (int j = s1.length() - 1 ; j >= 0; --j) {
+            
+            int t2= (int)s1[j] - 48;
+            int last_digit= t2 * t1;
+            if (ost) {
+                ost = 0;
+                last_digit += first_digit;
+            }
+            if (last_digit >= 10 && j != 0) {
+                int per = last_digit % 10;
+                first_digit = last_digit / 10;
+                last_digit = per;
+                ost = 1;
+            }
+            string res = to_string(last_digit);
+            temp = res + temp;
+        }
+            int count = 0;
+            while (count < k) {
+                temp += "0";
+                ++count;
+            }
+            ++k;
+            s = sum_strings(s, temp);
+    }
+    return s;
+}
+
+string factorial(int factorial) {
+    if (factorial == 1 || factorial == 0) {
+        return "1";
+    }
+    string s = "1";
+    string result = "1";
+    string fac = to_string(factorial);
+    do {
+        s = sum_strings(s, "1");
+        result = multiply(s, result);
+    } while (s != fac);
+    return result;
+}
